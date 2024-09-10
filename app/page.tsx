@@ -1,6 +1,5 @@
 'use client'
 
-import WebApp from "@twa-dev/sdk";
 import { useEffect, useState } from "react";
 
 interface UserData {
@@ -14,17 +13,20 @@ interface UserData {
 
 export default function Home() {
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [isClient, setIsClient] = useState(false);  // Add a state to check if the component is mounted
+  const [isClient, setIsClient] = useState(false);  // State to check if it's client-side
 
   useEffect(() => {
-    setIsClient(true);  // Indicate that we're now on the client side
+    setIsClient(true);  // This will only be true after the component is mounted in the browser
   }, []);
 
   useEffect(() => {
-    if (isClient && WebApp.initDataUnsafe.user) {
-      setUserData(WebApp.initDataUnsafe.user as UserData);
+    if (isClient) {
+      const WebApp = require("@twa-dev/sdk");  // Dynamically import WebApp to avoid SSR issues
+      if (WebApp.initDataUnsafe.user) {
+        setUserData(WebApp.initDataUnsafe.user as UserData);
+      }
     }
-  }, [isClient]);  // Only run this effect once the component is on the client side
+  }, [isClient]);
 
   return (
     <main className="p-4">
