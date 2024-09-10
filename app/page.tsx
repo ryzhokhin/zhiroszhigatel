@@ -18,7 +18,7 @@ export default function Home() {
     if (WebApp.initDataUnsafe.user){
       setUserData(WebApp.initDataUnsafe.user as UserData)
     }
-  })
+  }, [])
   return (
    <main className="p-4">
     {
